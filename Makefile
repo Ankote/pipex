@@ -6,7 +6,7 @@
 #    By: aankote <aankote@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/06 11:46:31 by aankote           #+#    #+#              #
-#    Updated: 2023/02/10 18:20:29 by aankote          ###   ########.fr        #
+#    Updated: 2023/02/10 18:22:43 by aankote          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -49,5 +49,6 @@ re :fclean all
 
 push :
 	git add .
-	git commit -m date
+	git commit -m "Updated"
 	git push
+	echo @echo "\033[0;32mPuched ...\033[0m"
