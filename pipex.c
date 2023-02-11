@@ -6,7 +6,7 @@
 /*   By: aankote <aankote@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 17:49:59 by aankote           #+#    #+#             */
-/*   Updated: 2023/02/11 10:49:23 by aankote          ###   ########.fr       */
+/*   Updated: 2023/02/11 11:16:26 by aankote          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,6 @@ int main(int argc, char **argv, char **env)
     vl = 0;
     pipe (fd);
     id = fork();
-    
     if (id == 0)
     {   
         close(fd[0]);
