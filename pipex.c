@@ -6,7 +6,7 @@
 /*   By: aankote <aankote@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 17:49:59 by aankote           #+#    #+#             */
-/*   Updated: 2023/02/11 09:45:26 by aankote          ###   ########.fr       */
+/*   Updated: 2023/02/11 10:49:23 by aankote          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,15 @@ char *get_cmd(char **env, char *cmd)
     while (paths[++i])
     {
         command = ft_strjoin(paths[i], cmd);
-        if (!access(command, X_OK))
+        if(!access(command, X_OK))
             return (ft_free_dub(paths), command);
     }
     ft_free_dub(paths);
+       
     return (NULL);
 }
 
-int do_cmd_parent(char **env,char **av,int intcmd)
+int do_cmd_parent(char **env,char **av)
 {
     char **argVes;
     char *cm;
@@ -53,25 +54,27 @@ int do_cmd_parent(char **env,char **av,int intcmd)
     int i;
     
     i = 0;
-    argVes = ft_split(av[intcmd], ' ');
+    argVes = ft_split(av[2], ' ');
     cm = ft_strjoin("/", argVes[0]);
     path = get_paths(env);
     while (path[i])
     {
         cmd = ft_strjoin(path[i],cm);
+        vl = execve(av[2], argVes, NULL);
         vl = execve(cmd, argVes, path);
         i ++;
     }
-    if (vl == -1)
-    {
-        printf("command not found");
-        ft_free_dub(path);
-        return (ft_free_dub(argVes), free(cm), free(cmd), 0);
-    }
+    // if (vl == -1)
+    // {
+    //     perror(av[2]);
+    //     ft_free_dub(path);
+    //     return (ft_free_dub(argVes), free(cm), free(cmd), 0);
+    // }
     return (1);
 }
 
-int do_cmd_child(char **env,char **av,int cmda)
+
+int do_cmd_child(char **env,char **av)
 {
     char **argVes;
     char *cm;
@@ -81,41 +84,25 @@ int do_cmd_child(char **env,char **av,int cmda)
     int i;
     
     i = 0;
-    argVes = ft_split(av[cmda], ' ');
+    argVes = ft_split(av[3], ' ');
     cm = ft_strjoin("/", argVes[0]);
     path = get_paths(env);
     while (path[i])
     {
         cmd = ft_strjoin(path[i],cm);
+        vl = execve(av[3], argVes, NULL);
         vl = execve(cmd, argVes, path);
         i ++;
     }
     if (vl == -1)
     {
-        perror(av[cmda]);
+        printf("fail");
         ft_free_dub(path);
         return (ft_free_dub(argVes), free(cm), free(cmd), 0);
     }
     return (1);
 }
 
-// int do_cmd_child(int fd)
-// {
-//     char *p;
-//     char *res;
-//     res = ft_calloc(1, 1);
-//     while(1)
-//     {
-//         p = get_next_line(fd);
-//         if (!p)
-//             break ;
-//         res = ft_join_free(res, p);
-//         free(p);
-//     }
-//     free (p);
-//     printf("%s\n", res);
-//     return (0);
-// }
 
 int main(int argc, char **argv, char **env)
 {   
@@ -128,17 +115,16 @@ int main(int argc, char **argv, char **env)
     vl = 0;
     pipe (fd);
     id = fork();
-      
     
     if (id == 0)
     {   
         close(fd[0]);
         fd_in = open (argv[1], O_RDONLY);
         if (access(argv[1], R_OK) == -1)
-            ft_error("ERROR!\nCan't open file");
+            ft_error("No such file or directory");
         dup2(fd_in, 0);
         dup2(fd[1], 1);
-        do_cmd_parent(env, argv, 2);
+        do_cmd_parent(env, argv);
         close (fd[1]);
         close (fd_in);
     }
@@ -147,7 +133,7 @@ int main(int argc, char **argv, char **env)
         fd_out = open (argv[argc - 1],O_CREAT | O_TRUNC | O_RDWR , 0777);
         dup2(fd[0], 0);
         dup2(fd_out, 1);
-        do_cmd_parent(env, argv, argc - 2);
+        do_cmd_child(env, argv);
         close (fd_out);
         close (fd[0]);
         exit(127);

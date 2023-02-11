@@ -6,7 +6,7 @@
 #    By: aankote <aankote@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/06 11:46:31 by aankote           #+#    #+#              #
-#    Updated: 2023/02/11 09:16:15 by aankote          ###   ########.fr        #
+#    Updated: 2023/02/11 10:21:47 by aankote          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,13 +28,13 @@ all : $(NAME)
 $(NAME) : $(FILES)
 	@make -C libft
 	@make -C get_next_line
-	$(CC)  $(FILES) $(CFLAGS) $(INCLUDES) -o $(NAME)
+	@$(CC)  $(FILES) $(CFLAGS) $(INCLUDES) -o $(NAME)
 
 bonus : $(NAME_B)
 
 %.o:%.c
 	@$(CC)  $(CFLAGS)  -c $<  -o $@
-
+	@echo "\033[0;32m𝘾𝙧𝙚𝙖𝙩𝙞𝙣𝙜 ...\033[0m"
 clean :
 	@rm -fr libft/*.o && rm -fr libft/*.a
 	@rm -fr get_next_line/*.o && rm -fr get_next_line/*.a

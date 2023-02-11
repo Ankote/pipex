@@ -6,7 +6,7 @@
 /*   By: aankote <aankote@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/10 09:30:47 by aankote           #+#    #+#             */
-/*   Updated: 2023/02/10 09:34:15 by aankote          ###   ########.fr       */
+/*   Updated: 2023/02/11 10:51:06 by aankote          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,11 @@ char *ft_join_free(char *res, char *p)
     return (temp);
 }
 
-void ft_error(char *s)
+void ft_error(char *s1, char *s2)
 {
-    ft_putendl_fd(s, 1);
+    if (s1)
+        ft_putendl_fd(s1, 1);
+    if (s2)
+        ft_putendl_fd(s2, 1);
     exit (0);
 }
