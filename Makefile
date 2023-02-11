@@ -6,7 +6,7 @@
 #    By: aankote <aankote@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/06 11:46:31 by aankote           #+#    #+#              #
-#    Updated: 2023/02/10 18:22:43 by aankote          ###   ########.fr        #
+#    Updated: 2023/02/11 09:16:15 by aankote          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,10 +25,10 @@ INCLUDES = libft/libft.a get_next_line/get_next_line.a
 
 all : $(NAME)
 
-$(NAME) : $(OBJCS)
-	@cd libft && $(MAKE)
-	@cd get_next_line && $(MAKE)
-	@$(CC)  $(OBJCS) $(CFLAGS) $(INCLUDES) -o $(NAME)
+$(NAME) : $(FILES)
+	@make -C libft
+	@make -C get_next_line
+	$(CC)  $(FILES) $(CFLAGS) $(INCLUDES) -o $(NAME)
 
 bonus : $(NAME_B)
 
@@ -51,4 +51,4 @@ push :
 	git add .
 	git commit -m "Updated"
 	git push
-	echo @echo "\033[0;32mPuched ...\033[0m"
+	echo "\033[0;32mPuched ...\033[0m"

@@ -1,0 +1,12 @@
+#    Makefile                                           :+:      :+:    :+:    #
+CFLAGS = -Wall -Wextra -Werror
+FILES = pipex.c pipex_utils.c
+INCLUDES = libft/libft.a get_next_line/get_next_line.a
+all : $(NAME)
+	@make -C libft
+	@make -C get_next_line
+clean :
+	@rm -fr libft/*.o && rm -fr libft/*.a
+	@rm -fr get_next_line/*.o && rm -fr get_next_line/*.a
+fclean : clean
+re :fclean all
