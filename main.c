@@ -2,31 +2,23 @@
 
 int main()
 {
-    int fd[2];
     int id;
-
-    if (pipe(fd) == -1)
-        printf("can't opening the pipe\n");
+    int i;
     id = fork();
-    if (id == 0)
+    int n;
+
+    if (!id)
+        n = 1;
+    else
     {
-        close(fd[0]);
-        int x;
-        printf ("put x  :  ");
-        scanf("%d", &x);
-       // write (fd[1], &x,  4);
-        close (fd[1]);
+        wait(0);
+        n = 10;
     }
-    else{
-        close (fd[1]);
-        int y;
-        read(fd[0], &y, 4);
-        close(fd[0]);
-        printf("output  : %d\n", y);
-    }
+        
+    i = n - 1;
+    while (++i < n + 5)
+        printf("%d ", i);
+    if (id == -1)
+     printf ("\n");
     return 0;
-
-
-
-    
 }

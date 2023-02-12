@@ -6,7 +6,7 @@
 /*   By: aankote <aankote@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 17:49:59 by aankote           #+#    #+#             */
-/*   Updated: 2023/02/11 11:16:26 by aankote          ###   ########.fr       */
+/*   Updated: 2023/02/12 11:38:08 by aankote          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ char *get_cmd(char **env, char *cmd)
     return (NULL);
 }
 
-int do_cmd_parent(char **env,char **av)
+int first_child(char **env,char **av, int fd[2])
 {
     char **argVes;
     char *cm;
@@ -52,29 +52,30 @@ int do_cmd_parent(char **env,char **av)
     char *cmd;
     int vl;
     int i;
+    int fd_in;
     
-    i = 0;
+    i = -1;
     argVes = ft_split(av[2], ' ');
     cm = ft_strjoin("/", argVes[0]);
     path = get_paths(env);
-    while (path[i])
+    close(fd[0]);
+    fd_in = open (av[1], O_RDONLY);
+    if (access(av[1], R_OK) == -1)
+        ft_error(av[1], ": No such file or directory");
+    vl = execve(av[2], argVes, NULL);
+    dup2(fd_in, 0);
+    dup2(fd[1], 1);
+    while (path[++i])
     {
         cmd = ft_strjoin(path[i],cm);
-        vl = execve(av[2], argVes, NULL);
         vl = execve(cmd, argVes, path);
-        i ++;
     }
-    // if (vl == -1)
-    // {
-    //     perror(av[2]);
-    //     ft_free_dub(path);
-    //     return (ft_free_dub(argVes), free(cm), free(cmd), 0);
-    // }
+    close(fd_in);
+    close (fd[1]);
     return (1);
 }
 
-
-int do_cmd_child(char **env,char **av)
+int second_chiled(char **env,char **av, int fd[2])
 {
     char **argVes;
     char *cm;
@@ -82,59 +83,43 @@ int do_cmd_child(char **env,char **av)
     char *cmd;
     int vl;
     int i;
+    int fd_out;
     
-    i = 0;
+    i = -1;
+    fd_out = open (av[4],O_CREAT | O_TRUNC | O_RDWR , 0777);
+    close (fd[1]);
+    dup2(fd_out, 1);
+    dup2(fd[0], 0);
     argVes = ft_split(av[3], ' ');
     cm = ft_strjoin("/", argVes[0]);
     path = get_paths(env);
-    while (path[i])
+    vl = execve(av[3], argVes, NULL);
+    while (path[++i])
     {
         cmd = ft_strjoin(path[i],cm);
-        vl = execve(av[3], argVes, NULL);
         vl = execve(cmd, argVes, path);
-        i ++;
-    }
-    if (vl == -1)
-    {
-        printf("fail");
-        ft_free_dub(path);
-        return (ft_free_dub(argVes), free(cm), free(cmd), 0);
     }
     return (1);
 }
 
-
 int main(int argc, char **argv, char **env)
 {   
-    int fd_in;
-    int fd_out;
+
     int id;
-    int vl;
     int fd[2];
-    
-    vl = 0;
+    (void)argc;
     pipe (fd);
     id = fork();
-    if (id == 0)
-    {   
-        close(fd[0]);
-        fd_in = open (argv[1], O_RDONLY);
-        if (access(argv[1], R_OK) == -1)
-            ft_error("No such file or directory");
-        dup2(fd_in, 0);
-        dup2(fd[1], 1);
-        do_cmd_parent(env, argv);
-        close (fd[1]);
-        close (fd_in);
-    }
-    else{
-        close (fd[1]);
-        fd_out = open (argv[argc - 1],O_CREAT | O_TRUNC | O_RDWR , 0777);
-        dup2(fd[0], 0);
-        dup2(fd_out, 1);
-        do_cmd_child(env, argv);
-        close (fd_out);
-        close (fd[0]);
-        exit(127);
+    if (!id)
+        first_child(env, argv, fd); 
+    else
+    {
+        id = fork();
+        if(!id)
+            second_chiled(env, argv, fd);
+        else
+            wait(0);
+            
     }
 }
+
