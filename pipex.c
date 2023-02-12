@@ -6,7 +6,7 @@
 /*   By: aankote <aankote@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 17:49:59 by aankote           #+#    #+#             */
-/*   Updated: 2023/02/12 14:46:53 by aankote          ###   ########.fr       */
+/*   Updated: 2023/02/12 18:19:21 by aankote          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int first_child(char **env,char **av, int fd[2])
     }
     close(fd_in);
     close (fd[1]);
-    return (1);
+    return (vl);
 }
 
 int second_chiled(char **env,char **av, int fd[2])
@@ -99,27 +99,32 @@ int second_chiled(char **env,char **av, int fd[2])
         cmd = ft_strjoin(path[i],cm);
         vl = execve(cmd, argVes, path);
     }
-    return (1);
+    return (vl);
 }
 
 int main(int argc, char **argv, char **env)
 {   
 
     int id;
+    int id1;
     int fd[2];
+    int ex1 = 0;
+    int ex2 = 0;
     (void)argc;
     pipe (fd);
     id = fork();
     if (!id)
-        first_child(env, argv, fd); 
-    id = fork();
-    if(!id)
-        second_chiled(env, argv, fd);
+        ex1 = first_child(env, argv, fd); 
+    id1 = fork();
+    if(!id1)
+        ex2 =  second_chiled(env, argv, fd);
    close (fd[0]);
-   close(fd[1]); 
-    wait(NULL);
-    wait(NULL);
-   //exit (127);
+   close(fd[1]);
+   waitpid(id, NULL, 0);
+   waitpid(id1, NULL, 0);
+   if (ex1 == -1)
+        ft_error ("command not found : ", argv[2]);
+   exit (127);
    
 }
 
