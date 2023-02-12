@@ -6,7 +6,7 @@
 /*   By: aankote <aankote@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 17:49:59 by aankote           #+#    #+#             */
-/*   Updated: 2023/02/12 20:39:03 by aankote          ###   ########.fr       */
+/*   Updated: 2023/02/12 20:45:25 by aankote          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,23 +108,25 @@ int main(int argc, char **argv, char **env)
     int id;
     int id1;
     int fd[2];
-    int ex1 = 0;
-    int ex2 = 0;
     if (argc == 5)
     {
         pipe (fd);
         id = fork();
         if (!id)
-            ex1 = first_child(env, argv, fd); 
+        {
+            first_child(env, argv, fd); 
+            ft_error ("command not found : ", argv[2]);
+        }
         id1 = fork();
         if(!id1)
-            ex2 =  second_chiled(env, argv, fd);
+        {
+            second_chiled(env, argv, fd);
+            ft_error ("command not found : ", argv[3]);
+        } 
         close (fd[0]);
         close(fd[1]);
         waitpid(id, NULL, 0);
         waitpid(id1, NULL, 0);
-        if (ex1 == -1)
-                ft_error ("command not found : ", argv[2]);
         exit (127);
     }
     
