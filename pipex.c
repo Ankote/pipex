@@ -6,7 +6,7 @@
 /*   By: aankote <aankote@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 17:49:59 by aankote           #+#    #+#             */
-/*   Updated: 2023/02/12 11:38:08 by aankote          ###   ########.fr       */
+/*   Updated: 2023/02/12 14:46:53 by aankote          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,14 +112,14 @@ int main(int argc, char **argv, char **env)
     id = fork();
     if (!id)
         first_child(env, argv, fd); 
-    else
-    {
-        id = fork();
-        if(!id)
-            second_chiled(env, argv, fd);
-        else
-            wait(0);
-            
-    }
+    id = fork();
+    if(!id)
+        second_chiled(env, argv, fd);
+   close (fd[0]);
+   close(fd[1]); 
+    wait(NULL);
+    wait(NULL);
+   //exit (127);
+   
 }
 
