@@ -6,7 +6,7 @@
 #    By: aankote <aankote@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/06 11:46:31 by aankote           #+#    #+#              #
-#    Updated: 2023/02/14 08:25:07 by aankote          ###   ########.fr        #
+#    Updated: 2023/02/14 09:35:41 by aankote          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,13 +21,12 @@ ARC = ar -rc
 FILES = pipex.c pipex_utils.c
 OBJCS = $(FILES:.c=.o)
 
-INCLUDES = libft/libft.a get_next_line/get_next_line.a
+INCLUDES = libft/libft.a
 
 all : $(NAME)
 
 $(NAME) : $(FILES)
 	@make -C libft
-	@make -C get_next_line
 	@$(CC)  $(FILES) $(CFLAGS) $(INCLUDES) -o $(NAME)
 
 bonus : $(NAME_B)
@@ -37,7 +36,6 @@ bonus : $(NAME_B)
 	@echo "\033[0;32m𝘾𝙧𝙚𝙖𝙩𝙞𝙣𝙜 ...\033[0m"
 clean :
 	@rm -fr libft/*.o && rm -fr libft/*.a
-	@rm -fr get_next_line/*.o && rm -fr get_next_line/*.a
 	@rm -fr $(OBJCS)
 	@echo "\033[0;31m𝑶𝒃𝒋𝒆𝒄𝒕𝒔' 𝒄𝒍𝒆𝒂𝒏𝒆𝒅\033[0m"
 
