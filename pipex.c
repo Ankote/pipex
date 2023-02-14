@@ -6,7 +6,7 @@
 /*   By: aankote <aankote@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 17:49:59 by aankote           #+#    #+#             */
-/*   Updated: 2023/02/12 20:45:25 by aankote          ###   ########.fr       */
+/*   Updated: 2023/02/14 08:30:05 by aankote          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ char *get_cmd(char **env, char *cmd)
             return (ft_free_dub(paths), command);
     }
     ft_free_dub(paths);
-       
     return (NULL);
 }
 
@@ -60,8 +59,6 @@ int first_child(char **env,char **av, int fd[2])
     path = get_paths(env);
     close(fd[0]);
     fd_in = open (av[1], O_RDONLY);
-    if (access(av[1], R_OK) == -1)
-        ft_error(av[1], ": No such file or directory");
     vl = execve(av[2], argVes, NULL);
     dup2(fd_in, 0);
     dup2(fd[1], 1);
@@ -69,10 +66,10 @@ int first_child(char **env,char **av, int fd[2])
     {
         cmd = ft_strjoin(path[i],cm);
         vl = execve(cmd, argVes, path);
+        free (cmd);
     }
     close(fd_in);
-    close (fd[1]);
-    return (vl);
+    return (free(cm), ft_free_dub(argVes),  vl);
 }
 
 int second_chiled(char **env,char **av, int fd[2])
@@ -98,37 +95,36 @@ int second_chiled(char **env,char **av, int fd[2])
     {
         cmd = ft_strjoin(path[i],cm);
         vl = execve(cmd, argVes, path);
+        free (cmd);
     }
-    return (vl);
+    close (fd_out);
+    return (free(cm), ft_free_dub(argVes), vl);
 }
 
 int main(int argc, char **argv, char **env)
-{   
-
-    int id;
+{  
     int id1;
+    int id2;
     int fd[2];
+    
     if (argc == 5)
     {
+        if (access(argv[1], R_OK) == -1)
+            ft_error(argv[1], ": No such file or directory");
         pipe (fd);
-        id = fork();
-        if (!id)
+        id1 = fork();
+        if (!id1)
         {
             first_child(env, argv, fd); 
             ft_error ("command not found : ", argv[2]);
         }
-        id1 = fork();
-        if(!id1)
+        id2 = fork();
+        if(!id2)
         {
             second_chiled(env, argv, fd);
             ft_error ("command not found : ", argv[3]);
-        } 
-        close (fd[0]);
-        close(fd[1]);
-        waitpid(id, NULL, 0);
-        waitpid(id1, NULL, 0);
-        exit (127);
+        }
+        ft_exit(fd, id1, id2);
     }
-    
 }
 
