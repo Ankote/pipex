@@ -6,13 +6,12 @@
 /*   By: aankote <aankote@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 17:50:58 by aankote           #+#    #+#             */
-/*   Updated: 2023/02/14 08:59:34 by aankote          ###   ########.fr       */
+/*   Updated: 2023/02/14 09:36:15 by aankote          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PIPEX_H
 # define PIPEX_H
-# include "get_next_line/get_next_line.h"
 # include "libft/libft.h"
 # include <fcntl.h>
 # include <stdio.h>
