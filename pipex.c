@@ -6,23 +6,12 @@
 /*   By: aankote <aankote@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 17:49:59 by aankote           #+#    #+#             */
-/*   Updated: 2023/02/14 08:58:40 by aankote          ###   ########.fr       */
+/*   Updated: 2023/02/15 11:01:12 by aankote          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 #include "unistd.h"
-
-char	**get_paths(char **env)
-{
-	while (env)
-	{
-		if (!ft_strncmp(*env, "PATH", 4))
-			return (ft_split(*env + 5, ':'));
-		env++;
-	}
-	return (0);
-}
 
 char	*get_cmd(char **env, char *cmd)
 {
@@ -95,31 +84,43 @@ int	second_chiled(char **av, int fd[2], char **path)
 	return (free(cm), ft_free_dub(sp_arg), 0);
 }
 
+void	exec_cmd(char **av, char **paths, int fd[2])
+{
+	int	id1;
+	int	id2;
+
+	if (access(av[1], R_OK) == -1)
+		ft_error(av[1], ": No such file or directory");
+	id1 = fork();
+	if (id1 == -1)
+		perror("pipe");
+	if (!id1)
+	{
+		first_child(av, fd, paths);
+		ft_error("command not found : ", av[2]);
+	}
+	id2 = fork();
+	if (id2 == -1)
+		perror("pipe");
+	if (!id2)
+	{
+		second_chiled(av, fd, paths);
+		ft_error("command not found : ", av[3]);
+	}
+	ft_exit(fd, id1, id2, paths);
+}
+
 int	main(int argc, char **argv, char **env)
 {
-	int		id1;
-	int		id2;
 	int		fd[2];
 	char	**paths;
 
 	paths = get_paths(env);
 	if (argc == 5)
 	{
-		if (access(argv[1], R_OK) == -1)
-			ft_error(argv[1], ": No such file or directory");
-		pipe(fd);
-		id1 = fork();
-		if (!id1)
-		{
-			first_child(argv, fd, paths);
-			ft_error("command not found : ", argv[2]);
-		}
-		id2 = fork();
-		if (!id2)
-		{
-			second_chiled(argv, fd, paths);
-			ft_error("command not found : ", argv[3]);
-		}
-		ft_exit(fd, id1, id2, paths);
+		if (pipe(fd) == -1)
+			perror("pipe");
+		else
+			exec_cmd(argv, paths, fd);
 	}
 }

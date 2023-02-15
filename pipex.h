@@ -6,7 +6,7 @@
 /*   By: aankote <aankote@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 17:50:58 by aankote           #+#    #+#             */
-/*   Updated: 2023/02/14 09:36:15 by aankote          ###   ########.fr       */
+/*   Updated: 2023/02/15 11:01:35 by aankote          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,4 +20,5 @@ void	ft_free_dub(char **p);
 char	*ft_join_free(char *res, char *p);
 void	ft_error(char *s1, char *s2);
 void	ft_exit(int fd[2], int id1, int id2, char **p);
+char	**get_paths(char **env);
 #endif

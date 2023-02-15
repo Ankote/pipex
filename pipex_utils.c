@@ -6,7 +6,7 @@
 /*   By: aankote <aankote@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/10 09:30:47 by aankote           #+#    #+#             */
-/*   Updated: 2023/02/14 09:04:04 by aankote          ###   ########.fr       */
+/*   Updated: 2023/02/15 11:01:26 by aankote          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	ft_error(char *s1, char *s2)
 		ft_putstr_fd(s1, 2);
 	if (s2)
 		ft_putendl_fd(s2, 2);
-	exit(0);
+	exit(127);
 }
 
 void	ft_exit(int fd[2], int id1, int id2, char **p)
@@ -51,4 +51,15 @@ void	ft_exit(int fd[2], int id1, int id2, char **p)
 	waitpid(id2, NULL, 0);
 	ft_free_dub(p);
 	exit(127);
+}
+
+char	**get_paths(char **env)
+{
+	while (env)
+	{
+		if (!ft_strncmp(*env, "PATH", 4))
+			return (ft_split(*env + 5, ':'));
+		env++;
+	}
+	return (0);
 }
