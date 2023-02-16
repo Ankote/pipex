@@ -6,12 +6,11 @@
 /*   By: aankote <aankote@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 17:49:59 by aankote           #+#    #+#             */
-/*   Updated: 2023/02/15 11:01:12 by aankote          ###   ########.fr       */
+/*   Updated: 2023/02/16 08:43:09 by aankote          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-#include "unistd.h"
 
 char	*get_cmd(char **env, char *cmd)
 {
@@ -45,9 +44,9 @@ int	first_child(char **av, int fd[2], char **path)
 	cm = ft_strjoin("/", sp_arg[0]);
 	close(fd[0]);
 	fd_in = open(av[1], O_RDONLY);
-	execve(av[2], sp_arg, NULL);
 	dup2(fd_in, 0);
 	dup2(fd[1], 1);
+	execve(av[2], sp_arg, NULL);
 	while (path[++i])
 	{
 		cmd = ft_strjoin(path[i], cm);
@@ -89,11 +88,9 @@ void	exec_cmd(char **av, char **paths, int fd[2])
 	int	id1;
 	int	id2;
 
-	if (access(av[1], R_OK) == -1)
-		ft_error(av[1], ": No such file or directory");
 	id1 = fork();
 	if (id1 == -1)
-		perror("pipe");
+		perror("fork");
 	if (!id1)
 	{
 		first_child(av, fd, paths);
@@ -101,12 +98,14 @@ void	exec_cmd(char **av, char **paths, int fd[2])
 	}
 	id2 = fork();
 	if (id2 == -1)
-		perror("pipe");
+		perror("fork");
 	if (!id2)
 	{
 		second_chiled(av, fd, paths);
 		ft_error("command not found : ", av[3]);
 	}
+	if (access(av[1], R_OK) == -1)
+		ft_error(av[1], " : No such file or directory");
 	ft_exit(fd, id1, id2, paths);
 }
 
