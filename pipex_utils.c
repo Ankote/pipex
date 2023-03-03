@@ -6,7 +6,7 @@
 /*   By: aankote <aankote@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/10 09:30:47 by aankote           #+#    #+#             */
-/*   Updated: 2023/02/15 11:15:08 by aankote          ###   ########.fr       */
+/*   Updated: 2023/02/18 14:46:18 by aankote          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	ft_exit(int fd[2], int id1, int id2, char **p)
 	waitpid(id1, NULL, 0);
 	waitpid(id2, NULL, 0);
 	ft_free_dub(p);
-	exit(127);
+	exit(0);
 }
 
 char	**get_paths(char **env)

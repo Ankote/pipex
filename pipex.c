@@ -6,7 +6,7 @@
 /*   By: aankote <aankote@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 17:49:59 by aankote           #+#    #+#             */
-/*   Updated: 2023/02/16 13:22:49 by aankote          ###   ########.fr       */
+/*   Updated: 2023/02/18 14:45:28 by aankote          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,5 +121,6 @@ int	main(int argc, char **argv, char **env)
 			perror("pipe");
 		else
 			exec_cmd(argv, paths, fd);
+		exit (0);
 	}
 }
